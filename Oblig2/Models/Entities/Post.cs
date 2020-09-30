@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Oblig2.Models.Entities
 {
-    public class Post
+    public class Post : BlogEntity
     {
         public virtual IdentityUser Owner { get; set; }
         public int PostId { get; set; }

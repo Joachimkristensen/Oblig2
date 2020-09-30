@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Oblig2.Models;
 using Oblig2.Models.Entities;
+using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Models.Repositories
 {
@@ -10,8 +11,8 @@ namespace Oblig2.Models.Repositories
     {
         IEnumerable<Blog> GetAll();
 
-        public BlogEditViewModel GetBlogEditViewModel();
+        public ViewModel GetBlogEditViewModel();
 
-        public Task Save(BlogEditViewModel blog, ClaimsPrincipal principal);
+        public Task Save(ViewModel blog, ClaimsPrincipal principal);
     }
 }

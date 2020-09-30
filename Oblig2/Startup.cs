@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oblig2.Data;
 using Oblig2.Models;
+using Oblig2.Models.Entities;
+using Oblig2.Models.Repositories;
 
 namespace Oblig2
 {
@@ -32,7 +34,10 @@ namespace Oblig2
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
-            services.AddTransient<IGenericRepository, BlogRepository>();
+            //services.AddTransient<IBlogRepository, BlogRepository>();
+            services.AddTransient<IGenericRepository<Blog>, GenericRepository<Blog>>();
+            //services.AddTransient<IGenericRepository, GenericRepository<Comment>>();
+            //services.AddTransient<IGenericRepository, GenericRepository<Post>>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

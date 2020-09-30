@@ -1,19 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Oblig2.Models;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Controllers
 {
     public class BlogController : Controller
     {
-        private readonly IBlogRepository _repository;
+        private readonly GenericRepository<Blog> _repository;
 
-        public BlogController(IBlogRepository repository)
+        public BlogController(IGenericRepository<Blog> repository)
         {
-            _repository = repository;
+            _repository = (GenericRepository<Blog>)repository;
         }
 
         public ActionResult Index()
@@ -25,7 +26,7 @@ namespace Oblig2.Controllers
         [Authorize]
         //POST: Blog/Create
         public async Task<ActionResult> Create([Bind("Name, Description")]
-            BlogEditViewModel blog)
+            ViewModel blog)
         {
             if (ModelState.IsValid)
             {

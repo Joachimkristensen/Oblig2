@@ -11,6 +11,7 @@ using Oblig2.Controllers;
 using Oblig2.Models;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using Oblig2.Models.ViewModels;
 using ProductUnitTest;
 
 namespace BlogControllerTest
@@ -80,7 +81,7 @@ namespace BlogControllerTest
 
             var viewResult = (ViewResult)_controller.Create();
 
-            var productsEditViewModel = viewResult.Model as BlogEditViewModel;
+            var productsEditViewModel = viewResult.Model as ViewModel;
             Assert.IsNotNull(productsEditViewModel);
             // Assert.AreEqual(2, productsEditViewModel.Categories.Count);
             // Assert.AreEqual(2, productsEditViewModel.Manufacturers.Count);
@@ -89,9 +90,9 @@ namespace BlogControllerTest
         [TestMethod]
         public void Save_NewBlog_SaveIsCalled()
         {
-            _repository.Setup(mock => mock.Save(It.IsAny<BlogEditViewModel>(), null));
+            _repository.Setup(mock => mock.Save(It.IsAny<ViewModel>(), null));
 
-            var result = _controller.Create(new BlogEditViewModel());
+            var result = _controller.Create(new ViewModel());
 
             _repository.VerifyAll();
         }
@@ -122,7 +123,7 @@ namespace BlogControllerTest
             var tempData =
                 new TempDataDictionary(controller.ControllerContext.HttpContext, Mock.Of<ITempDataProvider>());
             controller.TempData = tempData;
-            var viewModel = new BlogEditViewModel()
+            var viewModel = new ViewModel()
             {
                 Name = "My blog",
                 Description = "Description of blog"
@@ -137,7 +138,7 @@ namespace BlogControllerTest
         [TestMethod]
         public async Task CreateViewIsReturnedWhenInputIsNotValidAsync()
         {
-            var viewModel = new BlogEditViewModel()
+            var viewModel = new ViewModel()
             {
                 Name = "",
                 Description = "",
@@ -176,7 +177,7 @@ namespace BlogControllerTest
 
         private static void SetupMockWithBlogEditViewModel(Mock<IGenericRepository> repository)
         {
-            repository.Setup(mock => mock.GetBlogEditViewModel()).Returns(new BlogEditViewModel());
+            repository.Setup(mock => mock.GetBlogEditViewModel()).Returns(new ViewModel());
         }
 
         private BlogController _controller;

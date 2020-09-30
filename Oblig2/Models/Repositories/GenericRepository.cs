@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Oblig2.Data;
 using Oblig2.Models.Entities;
-using Oblig2.Models.Repositories;
 using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Models.Repositories
 {
-    public class BlogRepository : IBlogRepository
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BlogEntity
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _dbContext;
         private UserManager<IdentityUser> Manager { get; }
+        internal DbSet<TEntity> DbSet;
 
-        public BlogRepository(UserManager<IdentityUser> userManager, ApplicationDbContext db)
+        public GenericRepository(UserManager<IdentityUser> userManager, ApplicationDbContext dbContext)
         {
             Manager = userManager;
-            _db = db;
+            _dbContext = dbContext;
+            DbSet = _dbContext.Set<TEntity>();
         }
 
-        public IEnumerable<Blog> GetAll()
+        public IEnumerable<TEntity> GetAll()
         {
-            return _db.Blogs;
+            return DbSet;
         }
 
         public ViewModel GetBlogEditViewModel()
@@ -46,8 +47,8 @@ namespace Oblig2.Models.Repositories
                 Name = blog.Name
             };
 
-            await _db.Blogs.AddAsync(newBlog);
-            var result = await _db.SaveChangesAsync();
+            await _dbContext.Blogs.AddAsync(newBlog);
+            var result = await _dbContext.SaveChangesAsync();
 
             if (result == 0)
             {

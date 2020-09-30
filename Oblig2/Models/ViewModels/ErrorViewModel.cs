@@ -1,6 +1,4 @@
-using System;
-
-namespace Oblig2.Models
+namespace Oblig2.Models.ViewModels
 {
     public class ErrorViewModel
     {

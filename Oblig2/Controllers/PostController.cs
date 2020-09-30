@@ -8,7 +8,7 @@ namespace Oblig2.Controllers
 {
     public class PostController : Controller
     {
-        private readonly 
+        //private readonly -i
 
         public IActionResult Index()
         {
