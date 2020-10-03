@@ -1,47 +1,54 @@
-﻿@model IEnumerable<Oblig2.Models.Entities.Post>
-
+﻿@model Oblig2.Models.ViewModels.BlogEditViewModel
+@using Oblig2.Authorization
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Posts</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @Html.ActionLink("Create New Post", "Create", new { id = Model.BlogId })
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BlogId)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BlogId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Posts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                       User, item, PostOperations.Update)).Succeeded)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a>
+
+                    }
+                    |
+                    <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                       User, item, PostOperations.Delete)).Succeeded)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

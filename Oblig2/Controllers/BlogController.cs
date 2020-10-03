@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Oblig2.Models;
-using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Controllers
 {
@@ -27,26 +26,19 @@ namespace Oblig2.Controllers
         public async Task<ActionResult> Create([Bind("Name, Description")]
             BlogEditViewModel blog)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View();
+            try
             {
-                try
-                {
-                    await _repository.Save(blog, User);
+                await _repository.Save(blog, User);
 
-                    TempData["message"] = $"{blog.Name} has been created";
+                TempData["message"] = $"{blog.Name} has been created";
 
-                    return RedirectToAction("Index");
-                }
-                catch
-                {
-                    return View();
-                }
+                return RedirectToAction("Index");
             }
-            else
+            catch
             {
                 return View();
             }
-
         }
 
         [Authorize]
@@ -54,6 +46,14 @@ namespace Oblig2.Controllers
         public ActionResult Create()
         {
             var blog = _repository.GetBlogEditViewModel();
+            return View(blog);
+        }
+
+        [Authorize]
+        // Get: Blog/Details
+        public async Task<ActionResult> Details(int id)
+        {
+            var blog = await _repository.GetWithId(id);
             return View(blog);
         }
     }

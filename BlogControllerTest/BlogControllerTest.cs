@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Oblig2.Controllers;
-using Oblig2.Models;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using Oblig2.Models.ViewModels;
 using ProductUnitTest;
 
-namespace BlogControllerTest
+namespace ProductionUnitTest
 {
     [TestClass]
     public class BlogControllerTest
@@ -99,7 +99,7 @@ namespace BlogControllerTest
         [TestMethod]
         public void Create_Non_AuthorizedUser_ShouldShowLoginView()
         {
-            var mockRepo = new Mock<IGenericRepository>();
+            var mockRepo = new Mock<IBlogRepository>();
             var controller = new BlogController(mockRepo.Object)
             {
                 ControllerContext = MockHelpers.FakeControllerContext(false)
@@ -158,7 +158,7 @@ namespace BlogControllerTest
         }
 
 
-        private static void SetupMockToReturnFiveBlogsFromGetAllMethod(Mock<IGenericRepository> repository)
+        private static void SetupMockToReturnFiveBlogsFromGetAllMethod(Mock<IBlogRepository> repository)
         {
             repository.Setup(mock => mock.GetAll()).Returns(new List<Blog>()
             {
@@ -169,17 +169,17 @@ namespace BlogControllerTest
                 new Blog()
             });
         }
-        private static void SetupMockToReturnZeroBlogsFromGetAllMethod(Mock<IGenericRepository> repository)
+        private static void SetupMockToReturnZeroBlogsFromGetAllMethod(Mock<IBlogRepository> repository)
         {
             repository.Setup(mock => mock.GetAll()).Returns(new List<Blog>());
         }
 
-        private static void SetupMockWithBlogEditViewModel(Mock<IGenericRepository> repository)
+        private static void SetupMockWithBlogEditViewModel(Mock<IBlogRepository> repository)
         {
             repository.Setup(mock => mock.GetBlogEditViewModel()).Returns(new BlogEditViewModel());
         }
 
         private BlogController _controller;
-        private Mock<IGenericRepository> _repository;
+        private Mock<IBlogRepository> _repository;
     }
 }

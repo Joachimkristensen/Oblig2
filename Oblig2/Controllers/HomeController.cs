@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Oblig2.Models;
+using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Controllers
 {

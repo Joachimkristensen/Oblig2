@@ -4,9 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Oblig2.Data;
 using Oblig2.Models.Entities;
-using Oblig2.Models.Repositories;
+using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Models.Repositories
 {
@@ -24,6 +25,20 @@ namespace Oblig2.Models.Repositories
         public IEnumerable<Blog> GetAll()
         {
             return _db.Blogs;
+        }
+
+        public async Task<BlogEditViewModel> GetWithId(int id)
+        {
+            var blog = await _db.Blogs.FindAsync(id);
+            return new BlogEditViewModel
+            {
+                BlogId = blog.BlogId,
+                Description = blog.Description,
+                Name = blog.Name,
+                UserName = blog.UserName,
+                CreationDate = blog.CreationDate,
+                Posts = new List<Post>(await _db.Posts.Where(posts => posts.Blog.BlogId == id).ToListAsync())
+            };
         }
 
         public BlogEditViewModel GetBlogEditViewModel()

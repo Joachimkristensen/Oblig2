@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Oblig2.Models.Entities
 {
@@ -13,8 +9,9 @@ namespace Oblig2.Models.Entities
         public string UserName { get; set; }
         public string CreationDate { get; set; }
 
+        public string Description { get; set; }
+
         // Navigational properties
-        public string PostId { get; set; }
         public virtual Post Post { get; set; }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oblig2.Data;
 
 namespace Oblig2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201001110816_Debug check")]
+    partial class Debugcheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,13 +260,13 @@ namespace Oblig2.Migrations
                     b.Property<string>("CreationDate")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("PostId")
+                    b.Property<string>("PostId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PostId1")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -274,9 +276,9 @@ namespace Oblig2.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("PostId1");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("Oblig2.Models.Entities.Post", b =>
@@ -286,7 +288,10 @@ namespace Oblig2.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BlogId")
+                    b.Property<string>("BlogId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BlogId1")
                         .HasColumnType("int");
 
                     b.Property<string>("CreationDate")
@@ -301,15 +306,12 @@ namespace Oblig2.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PostId");
 
-                    b.HasIndex("BlogId");
+                    b.HasIndex("BlogId1");
 
                     b.HasIndex("OwnerId");
 
@@ -382,14 +384,14 @@ namespace Oblig2.Migrations
 
                     b.HasOne("Oblig2.Models.Entities.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId1");
                 });
 
             modelBuilder.Entity("Oblig2.Models.Entities.Post", b =>
                 {
                     b.HasOne("Oblig2.Models.Entities.Blog", "Blog")
                         .WithMany("Posts")
-                        .HasForeignKey("BlogId");
+                        .HasForeignKey("BlogId1");
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
                         .WithMany()
