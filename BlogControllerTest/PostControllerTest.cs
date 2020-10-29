@@ -216,7 +216,7 @@ namespace ProductionUnitTest
         {
             var owner = new ApplicationUser {Id = "12345"};
 
-            var user = new ApplicationUser { Id = "1" };
+            var user = new ApplicationUser { Id = "1", UserName = "Test"};
 
             var fakePost = new Post()
             {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oblig2.Authorization;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
-using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Controllers
 {

@@ -20,14 +20,7 @@ namespace Oblig2.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var blogs = new List<BlogApplicationUser>();
-
-            var result = await _repository.GetSubscribedBlogs(User);
-
-            if (result != null)
-            {
-                blogs = result as List<BlogApplicationUser>;
-            }
+            var blogs = await _repository.GetSubscribedBlogs(User);
 
             return View(blogs);
         }

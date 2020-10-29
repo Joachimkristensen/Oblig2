@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
 using Oblig2.Models.ViewModels;
@@ -53,13 +55,18 @@ namespace Oblig2.Controllers
         // Get: Blog/Details
         public async Task<ActionResult> Details(int id)
         {
-            var blog = await _repository.GetBlogWithId(id);
-            return View(blog);
+            return View(await _repository.GetBlogWithId(id));
         }
 
-        public async Task Subscribe(int id)
+        public async Task<RedirectToActionResult> Subscribe(int id)
         {
             await _repository.Subscribe(id, User);
+
+            var blog = await _repository.GetBlogWithId(id);
+
+            TempData["message"] = $"Subscribed to: {blog.Name}!";
+
+            return RedirectToAction("Details", new {id});
         }
     }
 }
