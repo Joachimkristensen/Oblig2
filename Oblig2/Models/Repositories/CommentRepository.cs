@@ -13,9 +13,9 @@ namespace Oblig2.Models.Repositories
     public class CommentRepository : ICommentRepository
     {
         private readonly ApplicationDbContext _db;
-        private UserManager<IdentityUser> Manager { get; }
+        private UserManager<ApplicationUser> Manager { get; }
 
-        public CommentRepository(UserManager<IdentityUser> userManager, ApplicationDbContext db)
+        public CommentRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             Manager = userManager;
             _db = db;

@@ -7,14 +7,17 @@ namespace Oblig2.Models.Repositories
 {
     public interface IPostRepository
     {
-        public Task<BlogEditViewModel> GetAll(int id);
+        public Task<Blog> GetAll(int id);
 
         public Task<PostEditViewModel> GetPostEditViewModel(int id);
 
-        public PostEditViewModel GetPostEditViewModel();
 
-        public Task Save(PostEditViewModel viewModel, ClaimsPrincipal principal);
+        public Task Save(Post post, ClaimsPrincipal principal);
 
         public Task<Post> GetPost(int id);
+
+        public Task Edit(Post post);
+
+        public Task Delete(Post post);
     }
 }

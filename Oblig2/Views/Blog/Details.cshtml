@@ -1,4 +1,4 @@
-﻿@model Oblig2.Models.ViewModels.BlogEditViewModel
+﻿@model Oblig2.Models.Entities.Blog
 
 @{
     ViewData["Title"] = "Details";
@@ -7,9 +7,14 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Blog</h4>
+    <h4> @Html.DisplayFor(model => model.Name)</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            <input type="button" name="btnSubscribe" value="Subscribe"
+                   onclick="location.href='@Url.Action("Subscribe", "Blog", new {id = Model.BlogId})'" />
+        </dt>
+        <dt class="col-10"></dt>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UserName)
         </dt>
@@ -38,9 +43,9 @@
             @Html.DisplayNameFor(model => model.Posts)
         </dt>
         <dd class="col-sm-10">
-            @Html.ActionLink("See posts", "Index", "Post", new {id=Model.BlogId})
+            @Html.ActionLink("See posts", "Index", "Post", new { id = Model.BlogId })
         </dd>
-        
+
     </dl>
 </div>
 <div>

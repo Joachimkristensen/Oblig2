@@ -2,7 +2,7 @@
 
 namespace Oblig2.Authorization
 {
-    public static class PostOperations
+    public static class EntityOperations
     {
         public static OperationAuthorizationRequirement Create =
           new OperationAuthorizationRequirement { Name = Constants.CreateOperationName };

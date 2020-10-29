@@ -15,7 +15,7 @@ namespace Oblig2.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -82,6 +82,10 @@ namespace Oblig2.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -133,6 +137,8 @@ namespace Oblig2.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -248,6 +254,28 @@ namespace Oblig2.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("Oblig2.Models.Entities.BlogApplicationUser", b =>
+                {
+                    b.Property<int>("BlogApplicationUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("BlogApplicationUserId");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BlogApplicationUsers");
+                });
+
             modelBuilder.Entity("Oblig2.Models.Entities.Comment", b =>
                 {
                     b.Property<int>("CommentId")
@@ -264,7 +292,7 @@ namespace Oblig2.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("PostId")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -286,16 +314,18 @@ namespace Oblig2.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BlogId")
+                    b.Property<int>("BlogId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreationDate")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerId")
@@ -314,6 +344,13 @@ namespace Oblig2.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Oblig2.Models.Entities.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -369,29 +406,44 @@ namespace Oblig2.Migrations
 
             modelBuilder.Entity("Oblig2.Models.Entities.Blog", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                    b.HasOne("Oblig2.Models.Entities.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
                 });
 
+            modelBuilder.Entity("Oblig2.Models.Entities.BlogApplicationUser", b =>
+                {
+                    b.HasOne("Oblig2.Models.Entities.Blog", "Blog")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("BlogId");
+
+                    b.HasOne("Oblig2.Models.Entities.ApplicationUser", "User")
+                        .WithMany("Blogs")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Oblig2.Models.Entities.Comment", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                    b.HasOne("Oblig2.Models.Entities.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
                     b.HasOne("Oblig2.Models.Entities.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Oblig2.Models.Entities.Post", b =>
                 {
                     b.HasOne("Oblig2.Models.Entities.Blog", "Blog")
                         .WithMany("Posts")
-                        .HasForeignKey("BlogId");
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                    b.HasOne("Oblig2.Models.Entities.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
                 });

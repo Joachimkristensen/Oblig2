@@ -26,12 +26,11 @@ namespace ProductUnitTest
 
         public static ControllerContext FakeControllerContext(bool isLoggedUser = true)
         {
-
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, "username"),
                 new Claim(ClaimTypes.NameIdentifier, "userId"),
-                new Claim("name", "Ola Nordman"),
+                new Claim("name", "Ola Nordmann")
             };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             var user = new ClaimsPrincipal(identity);

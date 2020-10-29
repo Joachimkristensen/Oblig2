@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Oblig2.Authorization;
 using Oblig2.Data;
 using Oblig2.Models.Entities;
 using Oblig2.Models.ViewModels;
@@ -16,20 +14,19 @@ namespace Oblig2.Models.Repositories
     public class PostRepository : IPostRepository
     {
         private readonly ApplicationDbContext _db;
-        private UserManager<IdentityUser> Manager { get; }
-        private IAuthorizationService _authorizationService;
+        private UserManager<ApplicationUser> Manager { get; }
 
-        public PostRepository(UserManager<IdentityUser> userManager, ApplicationDbContext db, IAuthorizationService authorizationService = null)
+        public PostRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             Manager = userManager;
             _db = db;
-            _authorizationService = authorizationService;
         }
 
-        public async Task <BlogEditViewModel> GetAll(int id)
+        public async Task<Blog> GetAll(int id)
         {
             var blog = await _db.Blogs.FirstOrDefaultAsync(posts => posts.BlogId == id);
-            var viewModel = new BlogEditViewModel
+            blog.Posts = new List<Post>(await _db.Posts.Where(posts => posts.Blog.BlogId == id).ToListAsync());
+            /*var viewModel = new BlogEditViewModel
             {
                 BlogId = blog.BlogId,
                 Name = blog.Name,
@@ -37,9 +34,9 @@ namespace Oblig2.Models.Repositories
                 Owner = blog.Owner,
                 CreationDate = blog.CreationDate,
                 Posts = new List<Post>(await _db.Posts.Where(posts => posts.Blog.BlogId == id).ToListAsync())
-            };
+            };*/
 
-            return viewModel;
+            return blog;
         }
 
         public async Task<PostEditViewModel> GetPostEditViewModel(int id)
@@ -66,14 +63,13 @@ namespace Oblig2.Models.Repositories
             return await post;
         }
 
-
         public PostEditViewModel GetPostEditViewModel()
         {
             return new PostEditViewModel();
         }
 
 
-        public async Task Save(PostEditViewModel viewModel, ClaimsPrincipal principal)
+        public async Task Save(Post post, ClaimsPrincipal principal)
         {
             var owner = await Manager.FindByNameAsync(principal.Identity.Name);
 
@@ -82,9 +78,9 @@ namespace Oblig2.Models.Repositories
                 Owner = owner,
                 UserName = owner.UserName,
                 CreationDate = DateTime.UtcNow.ToString("yyyy-MM-dd"),
-                Description = viewModel.Description,
-                Name = viewModel.Name,
-                Blog = await _db.Blogs.FindAsync(viewModel.BlogId)
+                Description = post.Description,
+                Name = post.Name,
+                Blog = await _db.Blogs.FindAsync(post.BlogId)
             };
 
             await _db.Posts.AddAsync(newPost);
@@ -95,7 +91,32 @@ namespace Oblig2.Models.Repositories
                 throw new Exception("Error saving changes");
             }
         }
-    }
 
+        public async Task Edit(Post post)
+        {
+            var editedPost = await (from p in _db.Posts
+                where p.PostId == post.PostId
+                select p).FirstOrDefaultAsync();
+
+            _db.Posts.Update(editedPost);
+            var result = await _db.SaveChangesAsync();
+
+            if (result == 0)
+            {
+                throw new Exception("Error editing post");
+            }
+        }
+
+        public async Task Delete(Post post)
+        {
+            _db.Posts.Remove(post);
+            var result = await _db.SaveChangesAsync();
+
+            if (result == 0)
+            {
+                throw new Exception("Error deleting post");
+            }
+        }
+    }
 }
 

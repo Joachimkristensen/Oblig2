@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oblig2.Authorization;
 using Oblig2.Data;
-using Oblig2.Models;
+using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
 using static Microsoft.AspNetCore.Mvc.CompatibilityVersion;
 
@@ -29,17 +29,20 @@ namespace Oblig2
         {
             services.AddControllersWithViews();
 
-            services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<ApplicationUser>().AddRoles<IdentityRole>()
+               .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            //services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddRazorPages();
             services.AddTransient<IBlogRepository, BlogRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<ICommentRepository, CommentRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                options.UseLazyLoadingProxies().UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-
+            
 
             // From 'Authorization2.startup.cs'
             services.AddMvc(config =>
@@ -54,7 +57,7 @@ namespace Oblig2
 
             // Authorization handlers.
             services.AddScoped<IAuthorizationHandler,
-                PostIsOwnerAuthorizationHandler>();
+                EntityAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

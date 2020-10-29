@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
 using Oblig2.Models.ViewModels;
 
@@ -20,11 +21,18 @@ namespace Oblig2.Controllers
             return View(_repository.GetAll());
         }
 
+        [Authorize]
+        // GET: Blog/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Authorize]
         //POST: Blog/Create
         public async Task<ActionResult> Create([Bind("Name, Description")]
-            BlogEditViewModel blog)
+            Blog blog)
         {
             if (!ModelState.IsValid) return View();
             try
@@ -42,19 +50,16 @@ namespace Oblig2.Controllers
         }
 
         [Authorize]
-        // GET: Blog/Create
-        public ActionResult Create()
-        {
-            var blog = _repository.GetBlogEditViewModel();
-            return View(blog);
-        }
-
-        [Authorize]
         // Get: Blog/Details
         public async Task<ActionResult> Details(int id)
         {
-            var blog = await _repository.GetWithId(id);
+            var blog = await _repository.GetBlogWithId(id);
             return View(blog);
+        }
+
+        public async Task Subscribe(int id)
+        {
+            await _repository.Subscribe(id, User);
         }
     }
 }

@@ -74,24 +74,11 @@ namespace ProductionUnitTest
         }
 
         [TestMethod]
-        public void GetCreate_WithFiveBlogs_ExistsInViewModel()
-        {
-            SetupMockWithBlogEditViewModel(_repository);
-
-            var viewResult = (ViewResult)_controller.Create();
-
-            var productsEditViewModel = viewResult.Model as BlogEditViewModel;
-            Assert.IsNotNull(productsEditViewModel);
-            // Assert.AreEqual(2, productsEditViewModel.Categories.Count);
-            // Assert.AreEqual(2, productsEditViewModel.Manufacturers.Count);
-        }
-
-        [TestMethod]
         public void Save_NewBlog_SaveIsCalled()
         {
-            _repository.Setup(mock => mock.Save(It.IsAny<BlogEditViewModel>(), null));
+            _repository.Setup(mock => mock.Save(It.IsAny<Blog>(), null));
 
-            var result = _controller.Create(new BlogEditViewModel());
+            var result = _controller.Create(new Blog());
 
             _repository.VerifyAll();
         }
@@ -122,13 +109,13 @@ namespace ProductionUnitTest
             var tempData =
                 new TempDataDictionary(controller.ControllerContext.HttpContext, Mock.Of<ITempDataProvider>());
             controller.TempData = tempData;
-            var viewModel = new BlogEditViewModel()
+            var blog = new Blog()
             {
                 Name = "My blog",
                 Description = "Description of blog"
             };
 
-            var result = Task.FromResult(await controller.Create(viewModel) as RedirectToActionResult);
+            var result = Task.FromResult(await controller.Create(blog) as RedirectToActionResult);
 
             Assert.IsNotNull(result, "RedirectToIndex needs to redirect to the Index action");
             Assert.AreEqual("Index", result.Result.ActionName);
@@ -137,26 +124,51 @@ namespace ProductionUnitTest
         [TestMethod]
         public async Task CreateViewIsReturnedWhenInputIsNotValidAsync()
         {
-            var viewModel = new BlogEditViewModel()
+            var blog = new Blog()
             {
                 Name = "",
                 Description = "",
             };
             var controller = new BlogController(_repository.Object);
 
-            var validationContext = new ValidationContext(viewModel, null, null);
+            var validationContext = new ValidationContext(blog, null, null);
             var validationResults = new List<ValidationResult>();
-            Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
+            Validator.TryValidateObject(blog, validationContext, validationResults, true);
             foreach (var validationResult in validationResults)
                 controller.ModelState.AddModelError(validationResult.MemberNames.First(),
                     validationResult.ErrorMessage);
 
-            var result = await controller.Create(viewModel);
+            var result = await controller.Create(blog);
 
             Assert.IsNotNull(Task.FromResult(result));
             Assert.IsTrue(validationResults.Count > 0);
         }
 
+        [TestMethod]
+        public async Task DetailsReturnsNotNullResult()
+        {
+            var result = Task.FromResult(await _controller.Details(It.IsAny<int>()) as ViewResult);
+
+            Assert.IsNotNull(result, "View Result is null");
+        }
+
+        [TestMethod]
+        public async Task Details_BlogWithIdOne_ExistsInViewModel()
+        {
+            SetupMockToReturnOneBlogFromGetWithIdMethod(_repository);
+
+            var expectedName = "Name here";
+            var expectedDescription = "Description here";
+
+            var result = Task.FromResult(await _controller.Details(1) as ViewResult);
+
+            Assert.IsNotNull(result, "View Result is null");
+
+            var blog = result.Result.Model as Blog;
+
+            Assert.AreEqual(blog.Name, expectedName, "Blog names are different");
+            Assert.AreEqual(blog.Description, expectedDescription, "Blog names are different");
+        }
 
         private static void SetupMockToReturnFiveBlogsFromGetAllMethod(Mock<IBlogRepository> repository)
         {
@@ -169,14 +181,19 @@ namespace ProductionUnitTest
                 new Blog()
             });
         }
+
         private static void SetupMockToReturnZeroBlogsFromGetAllMethod(Mock<IBlogRepository> repository)
         {
             repository.Setup(mock => mock.GetAll()).Returns(new List<Blog>());
         }
 
-        private static void SetupMockWithBlogEditViewModel(Mock<IBlogRepository> repository)
+        private static void SetupMockToReturnOneBlogFromGetWithIdMethod(Mock<IBlogRepository> repository)
         {
-            repository.Setup(mock => mock.GetBlogEditViewModel()).Returns(new BlogEditViewModel());
+            repository.Setup(mock => mock.GetBlogWithId(1)).ReturnsAsync(new Blog()
+            {
+                Name = "Name here",
+                Description = "Description here"
+            });
         }
 
         private BlogController _controller;

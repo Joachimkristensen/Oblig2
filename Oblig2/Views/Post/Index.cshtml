@@ -1,4 +1,4 @@
-﻿@model Oblig2.Models.ViewModels.BlogEditViewModel
+﻿@model Oblig2.Models.Entities.Blog
 @using Oblig2.Authorization
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
@@ -35,15 +35,15 @@
                 </td>
                 <td>
                     @if ((await AuthorizationService.AuthorizeAsync(
-                       User, item, PostOperations.Update)).Succeeded)
+                       User, item, EntityOperations.Update)).Succeeded)
                     {
                         <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a>
-
                     }
                     |
                     <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
+
                     @if ((await AuthorizationService.AuthorizeAsync(
-                       User, item, PostOperations.Delete)).Succeeded)
+                       User, item, EntityOperations.Delete)).Succeeded)
                     {
                         <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
                     }

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Oblig2.Models.Entities
 {
-    public class Blog
+    public class Blog : IAuthorizationEntity
     {
-        public virtual IdentityUser Owner { get; set; }
+        public ApplicationUser Owner { get; set; }
         public int BlogId { get; set; }
         public string UserName { get; set; }
         public string CreationDate { get; set; }
@@ -14,5 +14,7 @@ namespace Oblig2.Models.Entities
 
         // Navigational properties
         public virtual List<Post> Posts { get; set; }
+
+        public virtual ICollection<BlogApplicationUser> Subscribers { get; set; }
     }
 }
