@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Oblig2.Data;
+using Oblig2.Models.Entities;
+using Oblig2.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Oblig2.Data;
-using Oblig2.Models.Entities;
-using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Models.Repositories
 {
@@ -31,10 +32,20 @@ namespace Oblig2.Models.Repositories
                 Description = post.Description,
                 Owner = post.Owner,
                 CreationDate = post.CreationDate,
-                Comments = new List<Comment>(_db.Comments.Where(comments=> comments.Post.PostId == id).ToList())
+                Comments = new List<Comment>(_db.Comments.Where(comments => comments.Post.PostId == id).ToList())
             };
 
             return viewModel;
+        }
+
+
+        public async Task<IEnumerable<Comment>> GetAll()
+        {
+            IEnumerable<Comment>
+                comments = await _db.Comments
+                    .ToListAsync();
+
+            return comments;
         }
 
         public async Task<CommentViewModel> GetCommentViewModel(int id)
@@ -51,10 +62,10 @@ namespace Oblig2.Models.Repositories
 
         public CommentViewModel GetCommentViewModel()
         {
-           return new CommentViewModel();
+            return new CommentViewModel();
         }
 
-        public async Task Save(CommentViewModel viewModel, ClaimsPrincipal principal)
+        public async Task Save(Comment comment, ClaimsPrincipal principal)
         {
             var owner = await Manager.FindByNameAsync(principal.Identity.Name);
 
@@ -63,8 +74,8 @@ namespace Oblig2.Models.Repositories
                 Owner = owner,
                 UserName = owner.UserName,
                 CreationDate = DateTime.UtcNow.ToString("yyyy-MM-dd"),
-                Description = viewModel.Description,
-                Post = await _db.Posts.FindAsync(viewModel.PostId)
+                Description = comment.Description,
+                Post = await _db.Posts.FindAsync(comment.PostId)
             };
 
             await _db.Comments.AddAsync(newComment);

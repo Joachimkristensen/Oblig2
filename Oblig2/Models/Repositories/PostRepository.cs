@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Oblig2.Data;
 using Oblig2.Models.Entities;
 using Oblig2.Models.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Oblig2.Models.Repositories
 {
@@ -57,8 +57,8 @@ namespace Oblig2.Models.Repositories
         public async Task<Post> GetPost(int id)
         {
             var post = (from p in _db.Posts
-                where p.PostId == id
-                select p).FirstOrDefaultAsync();
+                        where p.PostId == id
+                        select p).FirstOrDefaultAsync();
 
             return await post;
         }
@@ -95,8 +95,8 @@ namespace Oblig2.Models.Repositories
         public async Task Edit(Post post)
         {
             var editedPost = await (from p in _db.Posts
-                where p.PostId == post.PostId
-                select p).FirstOrDefaultAsync();
+                                    where p.PostId == post.PostId
+                                    select p).FirstOrDefaultAsync();
 
             _db.Posts.Update(editedPost);
             var result = await _db.SaveChangesAsync();

@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oblig2.Authorization;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using System.Threading.Tasks;
 
 namespace Oblig2.Controllers
 {
@@ -18,7 +18,7 @@ namespace Oblig2.Controllers
             _authorizationService = authorizationService;
         }
 
-        public async Task <IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id)
         {
             return View(await _repository.GetAll(id));
         }
@@ -45,7 +45,7 @@ namespace Oblig2.Controllers
 
                 TempData["message"] = $"Post: '{post.Name}' has been created";
 
-                return RedirectToAction("Index", "Post", new {id});
+                return RedirectToAction("Index", "Post", new { id });
             }
             catch
             {
@@ -104,7 +104,7 @@ namespace Oblig2.Controllers
 
                 var id = post.BlogId;
 
-                return RedirectToAction("Index", "Post", new {id});
+                return RedirectToAction("Index", "Post", new { id });
             }
             catch
             {
@@ -133,7 +133,7 @@ namespace Oblig2.Controllers
         // POST: Post/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize] 
+        [Authorize]
         public async Task<IActionResult> Delete(Post post, int postId)
         {
             if (!ModelState.IsValid) return View();

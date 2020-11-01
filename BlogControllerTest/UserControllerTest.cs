@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Castle.Components.DictionaryAdapter;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +8,9 @@ using Oblig2.Authorization;
 using Oblig2.Controllers;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProductionUnitTest
 {
@@ -58,7 +57,7 @@ namespace ProductionUnitTest
         {
             SetupMockToReturnThreeBlogsFromGetSubscribedBlogsMethod(_repository);
 
-            var user = new ApplicationUser {Id = "1", UserName = "test"};
+            var user = new ApplicationUser { Id = "1", UserName = "test" };
 
             _controller.ControllerContext = TestHelpers.FakeControllerContext(true, user.Id, user.UserName, "Admin");
 
@@ -66,7 +65,7 @@ namespace ProductionUnitTest
             var blogs = result.ViewData.Model as List<BlogApplicationUser>;
 
             Assert.AreEqual(3, blogs.Count, "Got wrong number of blogs");
-            
+
         }
 
 
@@ -80,9 +79,9 @@ namespace ProductionUnitTest
                {
                    Blog = new Blog()
                    {
-                       
+
                    }
-               }, 
+               },
                new BlogApplicationUser()
                {
                    Blog = new Blog()
@@ -98,7 +97,7 @@ namespace ProductionUnitTest
                    }
                },
             });
-        } 
+        }
 
         private Mock<IBlogRepository> _repository;
         private UserController _controller;

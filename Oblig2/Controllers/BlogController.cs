@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
-using Oblig2.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace Oblig2.Controllers
 {
@@ -66,7 +63,7 @@ namespace Oblig2.Controllers
 
             TempData["message"] = $"Subscribed to: {blog.Name}!";
 
-            return RedirectToAction("Details", new {id});
+            return RedirectToAction("Details", new { id });
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -16,6 +11,11 @@ using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
 using Oblig2.Models.ViewModels;
 using ProductUnitTest;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProductionUnitTest
 {
@@ -66,8 +66,8 @@ namespace ProductionUnitTest
 
             var blog = result.ViewData.Model as Blog;
             var posts = blog.Posts;
-           
-            Assert.AreEqual(3, posts.Count, "Got wrong number of posts"); 
+
+            Assert.AreEqual(3, posts.Count, "Got wrong number of posts");
         }
 
         [TestMethod]
@@ -187,36 +187,36 @@ namespace ProductionUnitTest
             Assert.AreEqual(blog.Description, expectedDescription, "Post names are different");
         }
 
-       /* [TestMethod]
-        public async Task Edit_AuthorizedUser_EditIsCalled()
-        {
-            SetupMockToReturnOnePostFromGetPostMethod(_repository);
+        /* [TestMethod]
+         public async Task Edit_AuthorizedUser_EditIsCalled()
+         {
+             SetupMockToReturnOnePostFromGetPostMethod(_repository);
 
-            var user = new IdentityUser("test") { Id = "1" };
+             var user = new IdentityUser("test") { Id = "1" };
 
-            var fakePost = SetupFakePost();
+             var fakePost = SetupFakePost();
 
-            _controller.ControllerContext =
-                TestHelpers.FakeControllerContext(true, user.Id, user.UserName, "Admin");
+             _controller.ControllerContext =
+                 TestHelpers.FakeControllerContext(true, user.Id, user.UserName, "Admin");
 
-            var tempData = new TempDataDictionary(
-                _controller.ControllerContext.HttpContext,
-                Mock.Of<ITempDataProvider>()
-            );
+             var tempData = new TempDataDictionary(
+                 _controller.ControllerContext.HttpContext,
+                 Mock.Of<ITempDataProvider>()
+             );
 
-            _controller.TempData = tempData;
+             _controller.TempData = tempData;
 
-            await _controller.Edit(fakePost, fakePost.PostId);
+             await _controller.Edit(fakePost, fakePost.PostId);
 
-            _repository.Verify(repository => repository.Edit(fakePost), Times.Once);
-        } */
+             _repository.Verify(repository => repository.Edit(fakePost), Times.Once);
+         } */
 
         [TestMethod]
         public void DeletePost_NonAuthorizedUser_RedirectsToLoginView()
         {
-            var owner = new ApplicationUser {Id = "12345"};
+            var owner = new ApplicationUser { Id = "12345" };
 
-            var user = new ApplicationUser { Id = "1", UserName = "Test"};
+            var user = new ApplicationUser { Id = "1", UserName = "Test" };
 
             var fakePost = new Post()
             {
@@ -236,7 +236,7 @@ namespace ProductionUnitTest
 
             _controller.ControllerContext =
                 TestHelpers.FakeControllerContext(true, user.Id, user.UserName, "Admins");
-            
+
             var tempData = new TempDataDictionary(
                 _controller.ControllerContext.HttpContext,
                 Mock.Of<ITempDataProvider>()
@@ -292,7 +292,7 @@ namespace ProductionUnitTest
 
         private static Post SetupFakePost()
         {
-            var owner = new ApplicationUser {Id = "1234"};
+            var owner = new ApplicationUser { Id = "1234" };
 
             var fakePost = new Post()
             {
@@ -314,7 +314,5 @@ namespace ProductionUnitTest
         private PostController _controller;
         private Mock<IPostRepository> _repository;
         private Mock<UserManager<ApplicationUser>> _userManagerMock;
-        private ClaimsPrincipal _user;
-
     }
 }

@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Oblig2.Models.Entities;
+using System.Threading.Tasks;
 
 namespace Oblig2.Authorization
 {
@@ -20,7 +20,8 @@ namespace Oblig2.Authorization
             AuthorizationHandlerContext context,
             OperationAuthorizationRequirement requirement,
             IAuthorizationEntity resource
-            ) {
+            )
+        {
             if (context.User == null || resource == null)
             {
                 return Task.CompletedTask;

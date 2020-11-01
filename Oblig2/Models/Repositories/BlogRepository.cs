@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Oblig2.Data;
+using Oblig2.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using Oblig2.Data;
-using Oblig2.Models.Entities;
-using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Models.Repositories
 {
@@ -66,8 +64,8 @@ namespace Oblig2.Models.Repositories
         public async Task Edit(Blog blog, ClaimsPrincipal principal)
         {
             var editedBlog = await (from b in _db.Blogs
-                where b.BlogId == blog.BlogId
-                select b).FirstOrDefaultAsync();
+                                    where b.BlogId == blog.BlogId
+                                    select b).FirstOrDefaultAsync();
 
             _db.Blogs.Update(editedBlog);
             var result = await _db.SaveChangesAsync();
@@ -83,8 +81,8 @@ namespace Oblig2.Models.Repositories
             var subscriber = await Manager.FindByNameAsync(principal.Identity.Name);
 
             var blog = await (from b in _db.Blogs
-                where b.BlogId == blogId
-                select b).FirstOrDefaultAsync();
+                              where b.BlogId == blogId
+                              select b).FirstOrDefaultAsync();
 
             var subscription = new BlogApplicationUser
             {

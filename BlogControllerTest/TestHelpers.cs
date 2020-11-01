@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text;
 
 namespace ProductionUnitTest
 {
@@ -75,7 +75,7 @@ namespace ProductionUnitTest
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             var user = new ClaimsPrincipal(identity);
             var httpContext = new DefaultHttpContext { User = isLoggedUser ? user : null };
-            return new ControllerContext { HttpContext = httpContext};
+            return new ControllerContext { HttpContext = httpContext };
         }
 
     }

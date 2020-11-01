@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using System.Threading.Tasks;
 
 namespace Oblig2.Controllers
 {
@@ -24,6 +22,6 @@ namespace Oblig2.Controllers
 
             return View(blogs);
         }
-        
+
     }
 }

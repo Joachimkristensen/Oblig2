@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Protocols;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Oblig2.Data;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace ProductionUnitTest
 {
@@ -34,22 +27,22 @@ namespace ProductionUnitTest
             _userManagerMock.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("1234");
         }
 
-        
-       /* [TestMethod]
-        public void GetAll_ShouldReturnAllBlogs()
-        {
-            var blogs = _repository.Object.GetAll();
 
-            Ass
+        /* [TestMethod]
+         public void GetAll_ShouldReturnAllBlogs()
+         {
+             var blogs = _repository.Object.GetAll();
 
-        } */
+             Ass
 
-        
+         } */
+
+
         private static Blog SetupFakeBlog()
         {
-            var user = new ApplicationUser{ Id = "1" };
+            var user = new ApplicationUser { Id = "1" };
 
-            var owner = new ApplicationUser{ Id = "2" };
+            var owner = new ApplicationUser { Id = "2" };
 
             var fakeBlog = new Blog()
             {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
 namespace Oblig2.Models.Entities
 {
@@ -14,8 +13,8 @@ namespace Oblig2.Models.Entities
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Description { get; set; } 
-        
+        public string Description { get; set; }
+
         // Navigational properties
         public virtual Blog Blog { get; set; }
 

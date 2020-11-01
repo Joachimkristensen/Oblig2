@@ -1,7 +1,7 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Oblig2.Models.Entities;
+﻿using Oblig2.Models.Entities;
 using Oblig2.Models.ViewModels;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Oblig2.Models.Repositories
 {
@@ -10,7 +10,6 @@ namespace Oblig2.Models.Repositories
         public Task<Blog> GetAll(int id);
 
         public Task<PostEditViewModel> GetPostEditViewModel(int id);
-
 
         public Task Save(Post post, ClaimsPrincipal principal);
 

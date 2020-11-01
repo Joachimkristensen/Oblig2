@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
+using Oblig2.Models.Entities;
+using Oblig2.Models.ViewModels;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Oblig2.Models.ViewModels;
 
 namespace Oblig2.Models.Repositories
 {
@@ -15,6 +14,6 @@ namespace Oblig2.Models.Repositories
 
         public CommentViewModel GetCommentViewModel();
 
-        public Task Save(CommentViewModel viewModel, ClaimsPrincipal principal);
+        public Task Save(Comment comment, ClaimsPrincipal principal);
     }
 }

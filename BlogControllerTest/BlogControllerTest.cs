@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,8 +5,12 @@ using Moq;
 using Oblig2.Controllers;
 using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
-using Oblig2.Models.ViewModels;
 using ProductUnitTest;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProductionUnitTest
 {
@@ -21,7 +20,7 @@ namespace ProductionUnitTest
         [TestInitialize]
         public void SetUp()
         {
-            _repository = new Mock<IBlogRepository>() ;
+            _repository = new Mock<IBlogRepository>();
             _controller = new BlogController(_repository.Object);
         }
 
@@ -44,7 +43,7 @@ namespace ProductionUnitTest
         {
             SetupMockToReturnFiveBlogsFromGetAllMethod(_repository);
 
-            var result = (ViewResult) _controller.Index();
+            var result = (ViewResult)_controller.Index();
 
             CollectionAssert.AllItemsAreInstancesOfType((ICollection)result.ViewData.Model, typeof(Blog));
 

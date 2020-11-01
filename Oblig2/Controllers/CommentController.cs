@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oblig2.Models.Entities;
 using Oblig2.Models.Repositories;
 using Oblig2.Models.ViewModels;
 
@@ -24,7 +25,7 @@ namespace Oblig2.Controllers
         [Authorize]
         //POST: Comment/Create
         public async Task<ActionResult> Create([Bind("Description")]
-            CommentViewModel comment, int id)
+            Comment comment, int id)
         {
             if (!ModelState.IsValid) return View();
             try
@@ -34,7 +35,7 @@ namespace Oblig2.Controllers
 
                 TempData["message"] = "Your comment has been created";
 
-                return RedirectToAction("Index", "Comment", new {id});
+                return RedirectToAction("Index", "Comment", new { id });
             }
             catch
             {

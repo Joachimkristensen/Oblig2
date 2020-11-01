@@ -5,43 +5,126 @@
 }
 
 <h1>Index</h1>
+<button type="button" name="btnLink" id="btnLink">Create comment</button>
+<div class="modal fade" id="ModalPopUp" role="dialog">
+    <div class="modal-dialog err-pop" style="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align:center">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input type="text" id="description" name="description"><br>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" name="btnCreate" id="btnCreate">Create comment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    @Html.ActionLink("Create New Comment", "Create", new { id = Model.PostId })
-</p>
 <table class="table">
     <thead>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.CreationDate)
+            Date created
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            Description
         </th>
         <th></th>
     </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model.Comments) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreationDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Owner.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@item.CommentId">Edit</a> |
-            <a asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
-            <a asp-action="Delete" asp-route-id="@item.CommentId">Delete</a>
-        </td>
-    </tr>
-}
+    <tbody id="comments">
     </tbody>
 </table>
+<div id="update"></div>
+
+<script src="https://code.jquery.com/jquery-1.10.0.min.js"
+        integrity="sha256-2+LznWeWgL7AJ1ciaIG5rFP7GKemzzl+K75tRyTByOE="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    setInterval("update()", 10000);
+
+    async function update() {
+        getComments(async function(comments) {
+            const response = await fetch(`/api/comment/${@Model.PostId}`);
+            const jsonResult = await response.json();
+
+            var strComments = "";
+            for (let key in jsonResult) {
+                if (jsonResult.hasOwnProperty(key)) {
+                    const comment = jsonResult[key];
+                    strComments += `<tr><td>${comment.creationDate}</td><td>${comment.userName}<th>${comment.description}</th></tr>`;
+                }
+            }
+
+            $("#comments").html(strComments);
+        });
+
+        function getComments(callback) {
+            $.ajax({
+                url: "/api/comment/@Model.PostId",
+                data: {},
+                type: "GET",
+                contentType: "application/json;charset=utf-8"
+            }).then(function(products){
+                callback(products);
+            });
+        }
+    }
+
+
+    $("#btnLink").click(function() {
+        $('#ModalPopUp').modal('show');
+    });
+
+    $("#btnCreate").click(function() {
+        console.log("clicked!");
+        const date = new Date();
+
+        const comment = {
+            "CreationDate": date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+            "Description": $("#description").val(),
+            "PostId": "@Model.PostId"
+        };
+
+        $.ajax(
+            {
+                type: "POST",
+                url: "/api/Comment/",
+                data: JSON.stringify(comment),
+                contentType: "application/json;charset=utf-8",
+                dataType: 'json',
+                success: function (result) {
+                    $('#ModalPopUp').modal('hide');
+                },
+                error: function (req, status, error) {
+                    $("#update").html("AJAX error");
+                }
+            });
+    });
+
+
+    window.onload = function() { update() };
+</script>
+
+<script type="text/javascript">
+    function newComment(replyTo = 0,) {
+        const cookie = document.cookie;
+        const token = cookie["JWT.Token"];
+        console.log(token);
+    }
+</script>
